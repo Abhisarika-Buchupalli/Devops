@@ -1,0 +1,367 @@
+2. Document sentiment classification
+
+
+1.	Document Sentiment Classification (positive/negative/neutral)
+2.	Sentiment Rating Prediction (e.g., predicting star ratings from 1–5)
+📦 Tools Used: Scikit-learn, NLTK, TextBlob, VADER, IMDb movie reviews (Dataset)
+
+Scikit-learn
+
+Scikit-learn Tool: A Quick Guide for Sentiment Analysis
+Scikit-learn (also known as sklearn) is a powerful and easy-to-use open-source machine learning library in Python. It provides efficient tools for data preprocessing, classification, regression, clustering, model evaluation, and more.
+In the context of Sentiment Analysis, Scikit-learn helps implement:
+✅ Document Sentiment Classification
+✅ Sentiment Rating Prediction
+________________________________________
+🎯 What Can You Do with Scikit-learn in Sentiment Analysis?
+Task	Scikit-learn Tool Used
+Text Vectorization	TfidfVectorizer, CountVectorizer
+Splitting Dataset	train_test_split
+Building Classification Models	LogisticRegression, SVM, Naive Bayes
+Building Regression Models	LinearRegression, SVR
+Model Evaluation	classification_report, confusion_matrix, mean_squared_error
+________________________________________
+🔧 Core Components Used in Sentiment Tasks
+1.	Text Preprocessing
+Scikit-learn uses vectorizers to convert text into numerical format:
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+vectorizer = TfidfVectorizer(stop_words='english')
+X = vectorizer.fit_transform(corpus)  # corpus = list of reviews
+2.	Train/Test Split
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+3.	Model Building
+•	Classification:
+from sklearn.linear_model import LogisticRegression
+
+clf = LogisticRegression()
+clf.fit(X_train, y_train)
+predicted = clf.predict(X_test)
+•	Regression:
+from sklearn.linear_model import LinearRegression
+
+reg = LinearRegression()
+reg.fit(X_train, y_train)
+predicted_rating = reg.predict(X_test)
+4.	Model Evaluation
+•	For classification:
+from sklearn.metrics import classification_report, confusion_matrix
+
+print(classification_report(y_test, predicted))
+print(confusion_matrix(y_test, predicted))
+•	For regression:
+from sklearn.metrics import mean_squared_error, r2_score
+
+print(mean_squared_error(y_test, predicted_rating, squared=False))
+print(r2_score(y_test, predicted_rating))
+________________________________________
+📦 Key Scikit-learn Classes & Functions for Sentiment Analysis
+Function/Class	Purpose
+TfidfVectorizer / CountVectorizer	Converts text into numerical features
+train_test_split	Splits dataset into training and testing
+LogisticRegression	For sentiment classification
+LinearRegression	For predicting numeric sentiment ratings
+classification_report	Evaluates classification results
+mean_squared_error, r2_score	Evaluate regression models
+________________________________________
+📘 Summary
+Scikit-learn is the ideal tool for:
+•	Rapid prototyping of ML-based sentiment models
+•	Building pipelines for both classification and regression tasks
+•	Evaluating performance using standard metrics
+Would you like a visual diagram (e.g., workflow of sentiment analysis with Scikit-learn)? I can generate that too.
+
+
+
+
+
+
+
+NLTK
+Here's a concise guide to using the �️ NLTK (Natural Language Toolkit) for sentiment analysis — especially useful in the text preprocessing and lexicon-based analysis stages.
+________________________________________
+📘 What is NLTK?
+NLTK is a leading platform for building Python programs to work with human language data. It provides text processing libraries for classification, tokenization, stemming, tagging, parsing, and semantic reasoning.
+________________________________________
+🔍 NLTK in Sentiment Analysis: Where It Fits
+Step	NLTK Tool Used	Purpose
+Tokenization	word_tokenize(), sent_tokenize()	Split text into words/sentences
+Stopword Removal	stopwords.words()	Remove common words (e.g., "the", "is")
+Stemming / Lemmatization	PorterStemmer, WordNetLemmatizer	Reduce words to root forms
+POS Tagging	pos_tag()	Identify word types (e.g., noun, verb)
+Lexicon-based Sentiment Scoring	VADER SentimentIntensityAnalyzer	Built-in sentiment score calculation
+________________________________________
+🧪 Sample Implementation in Python
+Step 1: Install and import
+pip install nltk
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('vader_lexicon')
+nltk.download('wordnet')
+Step 2: Preprocessing with NLTK
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+text = "The movie was wonderfully acted but the plot was boring."
+
+# Tokenization
+tokens = word_tokenize(text)
+
+# Stopword removal
+filtered = [word for word in tokens if word.lower() not in stopwords.words('english')]
+
+# Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized = [lemmatizer.lemmatize(word) for word in filtered]
+
+print("Processed words:", lemmatized)
+Step 3: Sentiment Analysis using VADER
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+sia = SentimentIntensityAnalyzer()
+score = sia.polarity_scores(text)
+
+print("Sentiment Scores:", score)
+# Output: {'neg': 0.195, 'neu': 0.604, 'pos': 0.201, 'compound': 0.0516}
+compound score ∈ [-1, 1] is often used to determine:
+•	Positive: compound ≥ 0.05
+•	Neutral: -0.05 < compound < 0.05
+•	Negative: compound ≤ -0.05
+________________________________________
+🛠️ Use Cases of NLTK in Sentiment Analysis
+Task	NLTK Tool/Function
+Clean and prepare text	word_tokenize(), stopwords, lemmatize
+Sentiment scoring	SentimentIntensityAnalyzer (VADER)
+Language features extraction	POS tagging
+Corpus-based learning	Access to movie reviews, Twitter data
+________________________________________
+📌 Summary
+NLTK is a powerful tool for:
+•	Text preprocessing for machine learning pipelines (e.g., with Scikit-learn)
+•	Lexicon-based sentiment classification via VADER
+•	Exploring rule-based and linguistic approaches
+Would you like a comparison of NLTK vs. Scikit-learn vs. spaCy in sentiment tasks or a full project notebook using NLTK only?
+
+TextBlob or VADER for sentiment scoring (optional)
+
+Here's a comparison and practical guide for using TextBlob and VADER — two of the most popular lexicon-based tools for sentiment scoring in Python.
+________________________________________
+🧰 Overview
+Feature	TextBlob	VADER (NLTK)
+Type	Rule-based, built on Pattern library	Lexicon + rule-based, tuned for social media
+Output	Polarity ∈ [–1, 1], Subjectivity	Positive, Negative, Neutral, Compound (∈ [–1, 1])
+Good for	Product reviews, general prose	Tweets, social media, informal text
+Language support	English (some multilingual)	English only
+Installation	textblob	nltk
+________________________________________
+🔧 1. Using TextBlob for Sentiment Scoring
+📦 Install:
+pip install textblob
+python -m textblob.download_corpora
+🔍 Code Example:
+from textblob import TextBlob
+
+text = "The movie was amazing and the performances were stellar!"
+
+blob = TextBlob(text)
+
+print("Polarity:", blob.sentiment.polarity)        # –1 to +1 (negative to positive)
+print("Subjectivity:", blob.sentiment.subjectivity)  # 0 (objective) to 1 (subjective)
+📈 Example Output:
+•	Polarity: 0.85 → strongly positive
+•	Subjectivity: 0.75 → highly opinionated
+________________________________________
+🔧 2. Using VADER (Valence Aware Dictionary for sEntiment Reasoning)
+📦 Install:
+pip install nltk
+📦 Setup:
+import nltk
+nltk.download('vader_lexicon')
+🔍 Code Example:
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+sia = SentimentIntensityAnalyzer()
+
+text = "The movie was amazing and the performances were stellar!"
+
+score = sia.polarity_scores(text)
+
+print("VADER Sentiment Scores:", score)
+📈 Output:
+•	{'neg': 0.0, 'neu': 0.361, 'pos': 0.639, 'compound': 0.8519}
+•	Use compound score:
+o	≥ 0.05 → Positive
+o	≤ –0.05 → Negative
+o	else → Neutral
+________________________________________
+⚖️ When to Use Which?
+Use Case	Recommended Tool
+Social media sentiment (tweets, chats, etc.)	VADER
+Reviews, blogs, or longer texts	TextBlob
+Need subjectivity detection	TextBlob
+Need fine-grained emotional nuance	VADER (via compound & pos/neg/neu)
+________________________________________
+📝 Summary
+•	Use TextBlob for general, grammatically well-formed text.
+•	Use VADER when analyzing social media, emojis, slang, or punctuation-rich inputs.
+Would you like a side-by-side plot of sentiment scores from both tools on the same dataset?
+
+
+
+
+
+Sample dataset: IMDb movie reviews (can be replaced with your dataset)
+
+Here's a sample IMDb movie reviews dataset you can use for sentiment analysis tasks like:
+•	Document Sentiment Classification (positive/negative)
+•	Sentiment Rating Prediction (1–10 scale or 1–5 stars)
+🎬 Sample IMDb Review Dataset (10 entries)
+You can expand this or use the real IMDb dataset (see sources below).
+📁 Sample (CSV-style):
+review_id	review_text	rating
+1	"An absolute masterpiece. Brilliant direction and stellar performances."	10
+2	"I fell asleep halfway. Poor script and no character development."	2
+3	"Not bad. Some parts dragged but overall a decent watch."	6
+4	"One of the worst films I've ever seen. Waste of time."	1
+5	"A delightful family movie with heartwarming moments."	8
+6	"Terrible acting. Predictable plot. Avoid it."	3
+7	"Solid performances, strong storyline, and great visuals."	9
+8	"Nothing special. Watchable but forgettable."	5
+9	"Loved every second. The music and emotions hit perfectly."	9
+10	"It was okay. Not great, not terrible. Just average."	5
+🗂️ Download Option
+Would you like this dataset as:
+•	CSV file?
+•	Pandas DataFrame code snippet?
+•	JSON format?
+🔄 Example Code to Load in Pandas
+import pandas as pd
+
+data = {
+    "review_id": range(1, 11),
+    "review_text": [
+        "An absolute masterpiece. Brilliant direction and stellar performances.",
+        "I fell asleep halfway. Poor script and no character development.",
+        "Not bad. Some parts dragged but overall a decent watch.",
+        "One of the worst films I've ever seen. Waste of time.",
+        "A delightful family movie with heartwarming moments.",
+        "Terrible acting. Predictable plot. Avoid it.",
+        "Solid performances, strong storyline, and great visuals.",
+        "Nothing special. Watchable but forgettable.",
+        "Loved every second. The music and emotions hit perfectly.",
+        "It was okay. Not great, not terrible. Just average."
+    ],
+    "rating": [10, 2, 6, 1, 8, 3, 9, 5, 9, 5]
+}
+
+df = pd.DataFrame(data)
+print(df)
+📚 Real IMDb Dataset Sources
+•	Large Movie Review Dataset (IMDb) by Maas et al.
+→ https://ai.stanford.edu/~amaas/data/sentiment/
+(50k labeled reviews for binary sentiment classification)
+•	IMDb Datasets (Kaggle)
+→ https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
+Would you like to proceed with sentiment analysis on this sample dataset using Scikit-learn or NLTK/VADER?
+
+
+
+
+All in one- single shot
+________________________________________
+🧪 1. Setup and Preprocessing
+Install dependencies (if not already installed):
+pip install nltk scikit-learn pandas matplotlib seaborn
+Sample Python code:
+import pandas as pd
+import nltk
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+nltk.download('punkt')
+________________________________________
+📥 2. Load Sample Data (Movie Reviews with Ratings)
+Let’s use a simulated dataset:
+# Sample dataset
+data = {
+    "review": [
+        "I absolutely loved the movie. It was fantastic!",
+        "Worst movie I have ever seen.",
+        "It was okay, not great but not bad.",
+        "The plot was boring and predictable.",
+        "Brilliant acting and wonderful story.",
+        "Not my type, but it was decent.",
+        "Terrible script and poor direction.",
+        "Beautiful cinematography and good performances.",
+        "Mediocre experience. Nothing stood out.",
+        "Outstanding! A masterpiece."
+    ],
+    "rating": [5, 1, 3, 2, 5, 3, 1, 4, 3, 5]
+}
+
+df = pd.DataFrame(data)
+Convert numerical ratings to sentiment labels (classification task):
+def to_sentiment_label(rating):
+    if rating <= 2:
+        return "negative"
+    elif rating == 3:
+        return "neutral"
+    else:
+        return "positive"
+
+df['sentiment'] = df['rating'].apply(to_sentiment_label)
+________________________________________
+📊 3. TF-IDF Vectorization
+tfidf = TfidfVectorizer(stop_words='english', max_features=500)
+X = tfidf.fit_transform(df['review'])
+________________________________________
+🧠 4. Document Sentiment Classification
+# Classification target
+y_class = df['sentiment']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_class, test_size=0.3, random_state=42)
+
+clf = LogisticRegression()
+clf.fit(X_train, y_train)
+
+y_pred = clf.predict(X_test)
+
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+# Confusion Matrix
+sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap="Blues", xticklabels=clf.classes_, yticklabels=clf.classes_)
+plt.title("Document Sentiment Classification")
+plt.show()
+________________________________________
+🔢 5. Sentiment Rating Prediction (1 to 5 stars)
+# Regression target
+y_reg = df['rating']
+
+X_train_r, X_test_r, y_train_r, y_test_r = train_test_split(X, y_reg, test_size=0.3, random_state=42)
+
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+reg = LinearRegression()
+reg.fit(X_train_r, y_train_r)
+
+y_pred_r = reg.predict(X_test_r)
+
+print("RMSE:", mean_squared_error(y_test_r, y_pred_r, squared=False))
+print("R² Score:", r2_score(y_test_r, y_pred_r))
+________________________________________
+📌 Summary
+Task	Method
+Document Sentiment Classification	Logistic Regression + TF-IDF
+Rating Prediction	Linear Regression + TF-IDF
+You can replace this dataset with a real one like IMDb, Yelp, or Amazon Reviews for better results.
+Would you like this code bundled into a downloadable Jupyter notebook or Python script?
+
